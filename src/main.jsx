@@ -1,0 +1,50 @@
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+import "./index.css"
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Layout from '../layout.jsx';
+import Home from './pages/home/Home.jsx';
+import Dashboard from './pages/dashboard/Dashboard.jsx';
+import ProtectedRoutes from './componenet/ProtectedRoutes.jsx';
+import Login from './pages/login/Login.jsx';
+import Register from './pages/Register/Register.jsx';
+import Profile from './pages/profile/profile.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: '',
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <Home />
+      },
+      {
+        path: 'login',
+        element: <Login />
+      },
+      {
+        path: 'signup',
+        element: <Register />
+      },
+      {
+        path: 'profile',
+        element: <ProtectedRoutes component={<Profile />} />
+      },
+      {
+        path: 'dashboard',
+        element: <ProtectedRoutes component={<Dashboard />} />
+      },
+      // {
+      //   path: 'user',
+      //   element: <ProtectedRoutes component={<SingleUser />} />
+      // },
+    ]
+  }
+])
+
+createRoot(document.getElementById('root')).render(
+  <RouterProvider router={router}>
+    <App />
+  </RouterProvider>
+)
