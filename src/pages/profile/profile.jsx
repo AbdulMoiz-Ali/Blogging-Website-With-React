@@ -28,7 +28,7 @@ function Profile() {
         console.log("Document data:", currentUserDoc);
         setUsname(`${currentUserDoc.firstname} ${currentUserDoc.lastname}`);
         setUsemail(currentUserDoc.email);
-        setUsurl(currentUserDoc.imageUrl);
+        setUsurl(currentUserDoc.image);
         setUsdescription(currentUserDoc.description);
       } else {
         console.log("No such document!");
@@ -101,7 +101,7 @@ function Profile() {
       if (userRef) {
         console.log(userRef);
         const docUpdate = await updateDoc(userRef, {
-          imageUrl: url,
+          image: url,
           description: desc
         });
       } else {
@@ -135,7 +135,7 @@ function Profile() {
         {/* public/image-2@2x.jpg */}
         <section className="dark:bg-gray-900">
           <div className="gap-8 items-center py-26 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
-            <img className="rounded-full w-96 h-96" src={user && usurl ? usurl : "public/image-2@2x.jpg"} alt="Profile" />
+            <img className="rounded-full w-96 h-96" src={user && usurl ? usurl : "https://i.ibb.co/ygKxdm8/image-2-2x.jpg"} alt="Profile" />
             <div className="mt-10 mb-10 md:mt-0">
               <h2 className="mb-4 text-5xl tracking-tight font-extrabold text-gray-900 dark:text-white">{usname}</h2>
               <h2 className="mb-4 text-2xl tracking-tight font-bold text-gray-900 dark:text-white">{usemail}</h2>

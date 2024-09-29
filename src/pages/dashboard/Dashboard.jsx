@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../configration/firebaseconfig/firebaseconfig.js';
-import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import Herocard from '../../componenet/herocard.jsx';
+import { addDoc, collection, doc, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 function Dashboard() {
     const {
@@ -15,6 +14,8 @@ function Dashboard() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [blogs, setBlogs] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
+
     const toggleModal = () => {
         setIsOpen(!isOpen);
     };
@@ -40,10 +41,12 @@ function Dashboard() {
                 setBlogs(userBlogs);
             }
         };
+
         loadBlogs();
     }, []);
 
     const sendDatatoFirestore = async (data) => {
+        setIsLoading(false);
         toggleModal();
         const blogfile = watch("blogimage");
         const blogimg = blogfile[0];
@@ -59,9 +62,10 @@ function Dashboard() {
                 uid: currentUser.uid,
                 title: blogname,
                 description: blogdesc,
-                imageUrl: url
+                imageUrl: url,
             });
             await updateDoc(docRef, { id: docRef.id });
+            setIsLoading(true);
             alert("Blog added successfully");
             // Reload blogs to update the list
             const fetchedBlogs = await fetchBlogs();
@@ -73,8 +77,7 @@ function Dashboard() {
     return (
         <>
             <div>
-
-                <div onClick={toggleModal} className='py-10 px-10'>
+                {isLoading ? <div onClick={toggleModal} className='py-10 px-10'>
                     <div className="flex items-center justify-center w-full">
                         <label className="flex flex-col items-center justify-center w-full h-40 border-4 border-purple-700 hover:border-solid border-dashed rounded-lg cursor-pointer bg-purple-400 hover:bg-purple-500 dark:bg-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-solid dark:hover:border-black dark:hover:bg-gray-600">
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -85,7 +88,7 @@ function Dashboard() {
                             </div>
                         </label>
                     </div>
-                </div>
+                </div> : <div className='flex flex-wrap items-center justify-center'><div className="loader"></div></div>}
 
 
                 {/* <button
@@ -129,6 +132,7 @@ function Dashboard() {
                                         <span className="sr-only">Close modal</span>
                                     </button>
                                 </div>
+
                                 <form id="create-model" onSubmit={handleSubmit(sendDatatoFirestore)}>
                                     <div className="flex flex-col grid gap-4 mb-4 sm:grid-cols-2">
                                         <div className='sm:col-span-2'>
@@ -188,7 +192,7 @@ function Dashboard() {
             </div>
 
 
-            <section class="dark:bg-gray-900">
+            <section className="dark:bg-gray-900">
                 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                     <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
                         <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
@@ -199,15 +203,15 @@ function Dashboard() {
                                 <div key={blog.id}>
                                     <div class="w-96 m-3 items-center sm:flex-col bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
                                         <img class="w-full h-72 rounded-lg sm:rounded-none sm:rounded-t-lg" src={blog.imageUrl} alt="Bonnie Avatar" />
-                                        <article className="p-6 bg-white rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                        <article className="p-6 bg-purple-400 rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{blog.title}</h2>
-                                            <p className="mb-5 font-light text-gray-500 dark:text-gray-400">{blog.description.slice(0, 130) + "....."}</p>
+                                            <p className="mb-5 font-semibold text-black dark:text-gray-400">{blog.description.slice(0, 130) + "....."}</p>
                                         </article>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <h2 className="text-center text-gray-500">No blogs found</h2>
+                            <div className='flex flex-wrap items-center justify-center'><div className="loader"></div></div>
                         )}
                     </div>
                 </div>

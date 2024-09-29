@@ -65,7 +65,7 @@ function Navbar() {
                     setauthbtn(false);
                     setusname(userData.firstname + " " + userData.lastname);
                     setusemail(userData.email);
-                    seturl(userData.imageUrl);
+                    seturl(userData.image);
                 })
                 .catch((err) => {
                     console.log(err);

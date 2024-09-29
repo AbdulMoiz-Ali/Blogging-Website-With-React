@@ -112,36 +112,38 @@ function Signup() {
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
               Register to Blogging
             </h2>
-
-            <form onSubmit={signupfoam} className="mt-2 space-y-4">
-              <div class="grid md:grid-cols-2 md:gap-6">
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                  <input ref={firstname} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="First Name" required />
+            {loder ? (
+              <div className="loader mx-auto mt-4"></div>
+            ) : (
+              <form onSubmit={signupfoam} className="mt-2 space-y-4">
+                <div class="grid md:grid-cols-2 md:gap-6">
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                    <input ref={firstname} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="First Name" required />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+                    <input ref={lastname} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last Name" required />
+                  </div>
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                  <input ref={lastname} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last Name" required />
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                  <input ref={email} type="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required />
                 </div>
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                <input ref={email} type="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required />
-              </div>
 
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                <input ref={password} type="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-              </div>
-              <div className="flex flex-col max-sm:gap-10 gap-5 items-center">
-                <button type="submit" className="bg-purple-900 w-50 px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-full dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> {loder ? (
-                  <div className="loader">loding................................</div>
-                ) : ("Login to your account")}</button>
-                <div className="text-sm max-sm:w-30 font-medium text-gray-900 dark:text-white">
-                  Already have an account? <button onClick={logingo} className="text-blue-600 hover:underline dark:text-blue-500">Login here...</button>
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+                  <input ref={password} type="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
                 </div>
-              </div>
-            </form>
+                <div className="flex flex-col max-sm:gap-10 gap-5 items-center">
+                  <button type="submit" className="bg-purple-900 w-50 px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-full dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> {loder ? (
+                    <div className="loader">loding................................</div>
+                  ) : ("Login to your account")}</button>
+                  <div className="text-sm max-sm:w-30 font-medium text-gray-900 dark:text-white">
+                    Already have an account? <button onClick={logingo} className="text-blue-600 hover:underline dark:text-blue-500">Login here...</button>
+                  </div>
+                </div>
+              </form>)}
           </div>
         </div>
       </section>
