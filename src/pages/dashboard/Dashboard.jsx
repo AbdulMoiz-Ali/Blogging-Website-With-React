@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../configration/firebaseconfig/firebaseconfig.js';
-import { addDoc, collection, doc, getDocs } from 'firebase/firestore';
-import Blogcard from '../../componenet/blogcard.jsx';
+import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import Herocard from '../../componenet/herocard.jsx';
 
 function Dashboard() {
     const {
@@ -14,7 +14,7 @@ function Dashboard() {
     } = useForm()
 
     const [isOpen, setIsOpen] = useState(false);
-    // const [blogs, setBlogs] = useState([])
+    const [blogs, setBlogs] = useState([])
     const toggleModal = () => {
         setIsOpen(!isOpen);
     };
@@ -25,93 +25,50 @@ function Dashboard() {
             const blogs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             return blogs;
         } catch (error) {
-            console.error("Error fetching blogs:", error);
+            console.log(error);
         }
     };
 
-    const [blogs, setBlogs] = useState([]);
 
     useEffect(() => {
         const loadBlogs = async () => {
             const fetchedBlogs = await fetchBlogs();
-            setBlogs(fetchedBlogs);
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            if (fetchedBlogs) {
+                // Filter blogs to only include those from the current user
+                const userBlogs = fetchedBlogs.filter(blog => blog.uid === currentUser.uid);
+                setBlogs(userBlogs);
+            }
         };
         loadBlogs();
     }, []);
 
-
-    const sendDatatoFirestore = (data) => {
+    const sendDatatoFirestore = async (data) => {
         toggleModal();
-        console.log(data);
-        const blogfile = watch("blogimage")
-        const blogimg = blogfile[0]
+        const blogfile = watch("blogimage");
+        const blogimg = blogfile[0];
         const blogname = watch("blogtitle");
         const blogdesc = watch("blogdescription");
-        console.log("name:" + blogname, blogimg, blogdesc)
+
         const storageRef = ref(storage, `user-profile-collection/${blogimg.name}`);
 
-        uploadBytes(storageRef, blogimg).then((snapshot) => {
-            getDownloadURL(storageRef).then((url) => {
-                const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-                addDoc(collection(db, "blogs"), {
-                    uid: currentUser.uid,
-                    title: blogname,
-                    description: blogdesc,
-                    imageUrl: url
-                }).then((snapshot) => {
-                    alert("moiz")
-                });
+        uploadBytes(storageRef, blogimg).then(async (snapshot) => {
+            const url = await getDownloadURL(storageRef);
+            const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            const docRef = await addDoc(collection(db, "blogs"), {
+                uid: currentUser.uid,
+                title: blogname,
+                description: blogdesc,
+                imageUrl: url
             });
-        })
-
-    }
-    // try {
-    //     const snapshot = await uploadBytes(storageRef, blogimg);
-    //     console.log("File successfully uploaded");
-    //     console.log(snapshot.metadata);
-
-    //     const url = await getDownloadURL(storageRef);
-    //     console.log(url);
-    //     console.log(user.uid);
-    //     setDoc(collection(db, "blogs"), {
-    //         uid: auth.currentUser.uid,
-    //         title: blogname,
-    //         description: blogdesc,
-    //         imageUrl: url
-    //     }).then((snapshot) => {
-    //         // loader display none
-    //         alert("moiz")
-    //     });
-    // } catch (error) {
-    //     console.log(error)
-    // }
-    // try {
-    //     const snapshot = await uploadBytes(storageRef, blogimg);
-    //     console.log("File successfully uploaded");
-    //     console.log(snapshot.metadata)
-    //     const url = await getDownloadURL(storageRef);
-    //     console.log(url);
-    //     console.log(user.uid);
-    //     const response = await sendData({
-    //         title: blogname,
-    //         description: blogdesc,
-    //         imageUrl: blogimg,
-    //         uid: user.uid
-    //     }, 'blogs')
-    //     blogs.push({
-    //         title: data.title,
-    //         description: data.description,
-    //         imageUrl: url,
-    //         uid: user.uid,
-    //     })
-    //     setBlogs([...blogs])
-    //     console.log(response);
-
-
-    // } catch (error) {
-    //     console.error(error)
-    // }
-
+            await updateDoc(docRef, { id: docRef.id });
+            alert("Blog added successfully");
+            // Reload blogs to update the list
+            const fetchedBlogs = await fetchBlogs();
+            const userBlogs = fetchedBlogs.filter(blog => blog.uid === currentUser.uid);
+            setBlogs(userBlogs);
+        });
+    };
 
     return (
         <>
@@ -231,40 +188,31 @@ function Dashboard() {
             </div>
 
 
-
-
-            {/* <h1 className='text-center'>User Blogs</h1>
-            <div>
-                {blogs.length > 0 ? blogs.map((item, index) => {
-                    return <div key={index} className="card m-5 p-3">
-                        <h1>{item.title}</h1>
-                        <p>{item.description}</p>
-                    </div>
-                }) : <h1>No blogs found</h1>}
-            </div> */}
-            <div>
-                <h1>Blogs</h1>
-                {blogs.map(blog => (
-                    <div key={blog.id}>
-                        <h2>{blog.title}</h2>
-                        <p>{blog.description}</p>
-                        <img src={blog.imageUrl} alt={blog.title} />
-                    </div>
-                ))}
-            </div>
-
-
-            <section class="bg-white dark:bg-gray-900">
+            <section class="dark:bg-gray-900">
                 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                     <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                        <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Our Blog</h2>
-                        <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">We use an agile approach to test assumptions and connect with the needs of your audience early and often.</p>
+                        <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
                     </div>
-                    <div class="grid gap-8 lg:grid-cols-2">
-                        <Blogcard title={"moiz"} description={"desmoiz"} />
+                    <div class="flex flex-wrap items-center justify-center">
+                        {blogs.length > 0 ? (
+                            blogs.map(blog => (
+                                <div key={blog.id}>
+                                    <div class="w-96 m-3 items-center sm:flex-col bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+                                        <img class="w-full h-72 rounded-lg sm:rounded-none sm:rounded-t-lg" src={blog.imageUrl} alt="Bonnie Avatar" />
+                                        <article className="p-6 bg-white rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                            <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{blog.title}</h2>
+                                            <p className="mb-5 font-light text-gray-500 dark:text-gray-400">{blog.description.slice(0, 130) + "....."}</p>
+                                        </article>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <h2 className="text-center text-gray-500">No blogs found</h2>
+                        )}
                     </div>
                 </div>
             </section>
+
         </>
     )
 }

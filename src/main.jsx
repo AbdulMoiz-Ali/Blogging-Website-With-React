@@ -2,13 +2,14 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import "./index.css"
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Layout from '../layout.jsx';
+import Layout from '../Layout.jsx';
 import Home from './pages/home/Home.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import ProtectedRoutes from './componenet/ProtectedRoutes.jsx';
 import Login from './pages/login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 import Profile from './pages/profile/profile.jsx';
+import Singleblog from './pages/singleblog/Singleblog.jsx';
 
 const router = createBrowserRouter([
   {
@@ -35,10 +36,10 @@ const router = createBrowserRouter([
         path: 'dashboard',
         element: <ProtectedRoutes component={<Dashboard />} />
       },
-      // {
-      //   path: 'user',
-      //   element: <ProtectedRoutes component={<SingleUser />} />
-      // },
+      {
+        path: ':id',
+        element: <Singleblog />
+      },
     ]
   }
 ])
