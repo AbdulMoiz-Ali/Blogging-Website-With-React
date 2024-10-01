@@ -4,6 +4,7 @@ import { auth, db, storage } from '../../configration/firebaseconfig/firebasecon
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useForm } from 'react-hook-form';
+import { Navigate, NavLink } from 'react-router-dom';
 
 function Profile() {
   const [usname, setUsname] = useState(null);
@@ -11,6 +12,8 @@ function Profile() {
   const [usdescription, setUsdescription] = useState(null);
   const [usurl, setUsurl] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -60,6 +63,9 @@ function Profile() {
 
   const currentid = JSON.parse(localStorage.getItem("currentUser"));
   const updateprofile = (data) => {
+    toggleSidebar()
+    setIsLoading(false)
+    console.log("submit")
     console.log(data)
     const image = watch("profileimage")
     const file = image[0]
@@ -111,6 +117,9 @@ function Profile() {
 
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(true)
+      window.location.href = ""
     }
 
   }
@@ -133,7 +142,7 @@ function Profile() {
     <>
       <div className='w-full dark:bg-gray-900'>
         {/* public/image-2@2x.jpg */}
-        <section className="dark:bg-gray-900">
+        {isLoading ? <section className="dark:bg-gray-900">
           <div className="gap-8 items-center py-26 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
             <img className="rounded-full w-96 h-96" src={user && usurl ? usurl : "https://i.ibb.co/ygKxdm8/image-2-2x.jpg"} alt="Profile" />
             <div className="mt-10 mb-10 md:mt-0">
@@ -153,7 +162,7 @@ function Profile() {
               </div>
             </div>
           </div>
-        </section>
+        </section> : <div className='flex flex-wrap items-center justify-center h-96'><div className="loader"></div></div>}
 
         {/* Sidebar */}
         {isSidebarOpen && (
@@ -195,9 +204,9 @@ function Profile() {
                   {/* <svg aria-hidden="true" class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> */}
                   Update
                 </button>
-                <button type="button" className="w-full justify-center hover:bg-purple-800 dark:text-white text-black bg-primary-700 dark:hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                <a onClick={toggleSidebar} className="w-full justify-center hover:bg-purple-800 dark:text-white text-black bg-primary-700 dark:hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   Cancel
-                </button>
+                </a>
               </div>
             </form>
           </div>

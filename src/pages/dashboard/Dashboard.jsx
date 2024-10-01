@@ -195,7 +195,7 @@ function Dashboard() {
             <section className="dark:bg-gray-900">
                 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                     <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                        <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
+                        <h2 class="mb-4 text-3xl lg:text-6xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
                     </div>
                     <div class="flex flex-wrap items-center justify-center">
                         {blogs.length > 0 ? (
@@ -211,7 +211,7 @@ function Dashboard() {
                                 </div>
                             ))
                         ) : (
-                            <div className='flex flex-wrap items-center justify-center'><div className="loader"></div></div>
+                            <div className='flex flex-wrap font-bold text-white text-2xl items-center dark:text-black justify-center'>Blogs Not Found!</div>
                         )}
                     </div>
                 </div>

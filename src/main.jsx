@@ -10,6 +10,7 @@ import Login from './pages/login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
 import Profile from './pages/profile/profile.jsx';
 import Singleblog from './pages/singleblog/Singleblog.jsx';
+import Error from './pages/error/error.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         path: ':id',
         element: <Singleblog />
       },
+      {
+        path: "*",
+        element: <Error />,
+      }
     ]
   }
 ])
