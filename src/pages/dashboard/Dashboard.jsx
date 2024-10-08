@@ -226,10 +226,10 @@ function Dashboard() {
                             blogs.map(blog => (
                                 <div key={blog.id}>
                                     {/* <ProfileBlogCard /> */}
-                                    <div className="m-3 w-96 items-center bg-gray-50 flex-col rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+                                    <div className="m-3 bg-purple-400 w-96 items-center bg-gray-50 flex-col rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
 
                                         <img className="w-full h-72 rounded-lg sm:rounded-none sm:rounded-t-lg" src={blog.imageUrl} alt="Bonnie Avatar" />
-                                        <article className="p-6 bg-purple-400 rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                        <article className="p-6 rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{blog.title}</h2>
                                             <p className="mb-5 font-semibold text-black dark:text-gray-400">{blog.description.slice(0, 130) + "....."}</p>
                                             {/* <ProfileBlogCard updateclick={updatemodel} clickdelete={toggleModal} /> */}
