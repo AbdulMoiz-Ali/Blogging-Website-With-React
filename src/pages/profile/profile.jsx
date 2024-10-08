@@ -4,7 +4,7 @@ import { auth, db, storage } from '../../configration/firebaseconfig/firebasecon
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useForm } from 'react-hook-form';
-import { Navigate, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [usname, setUsname] = useState(null);
@@ -13,6 +13,7 @@ function Profile() {
   const [usurl, setUsurl] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const nav = useNavigate()
 
   const {
     register,
@@ -119,7 +120,7 @@ function Profile() {
       console.log(error)
     } finally {
       setIsLoading(true)
-      window.location.href = ""
+      nav("/")
     }
 
   }
