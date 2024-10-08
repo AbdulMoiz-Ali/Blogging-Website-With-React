@@ -33,6 +33,10 @@ const router = createBrowserRouter([
         path: 'profile',
         element: <ProtectedRoutes component={<Profile />} />
       },
+      // {
+      //   path: 'dashboard',
+      //   element: <Dashboard />
+      // },
       {
         path: 'dashboard',
         element: <ProtectedRoutes component={<Dashboard />} />

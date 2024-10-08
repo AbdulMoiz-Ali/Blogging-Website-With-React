@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../configration/firebaseconfig/firebaseconfig.js';
-import { addDoc, collection, doc, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
+import Updateblog from '../../componenet/updateblog.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
     const {
@@ -13,13 +15,21 @@ function Dashboard() {
     } = useForm()
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isupdatemodel, setisupdatemodel] = useState(false);
     const [blogs, setBlogs] = useState([])
     const [isLoading, setIsLoading] = useState(true);
+    const [cardLoading, setcardLoading] = useState(true);
+    const [updateblogid, setupdateblogid] = useState(null);
+    const navigator = useNavigate()
 
     const toggleModal = () => {
         setIsOpen(!isOpen);
     };
-
+    const updatemodel = (blogid) => {
+        console.log(blogid)
+        setupdateblogid(blogid)
+        setisupdatemodel(!isupdatemodel);
+    };
     const fetchBlogs = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, "blogs"));
@@ -44,6 +54,13 @@ function Dashboard() {
 
         loadBlogs();
     }, []);
+
+    const deleteblog = async (blogid) => {
+        setcardLoading(false);
+        await deleteDoc(doc(db, "blogs", blogid));
+        setcardLoading(true);
+        navigator("/")
+    }
 
     const sendDatatoFirestore = async (data) => {
         setIsLoading(false);
@@ -191,21 +208,40 @@ function Dashboard() {
                 )}
             </div>
 
+            {/* update foam open */}
+
+            {isupdatemodel && (
+                <Updateblog bloid={updateblogid} />
+            )}
+
+            {/* update foam close */}
 
             <section className="dark:bg-gray-900">
-                <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-                    <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                        <h2 class="mb-4 text-3xl lg:text-6xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
+                <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                    <div className="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
+                        <h2 className="mb-4 text-3xl lg:text-6xl tracking-tight font-extrabold text-gray-900 dark:text-white">Dashboard</h2>
                     </div>
-                    <div class="flex flex-wrap items-center justify-center">
+                    {cardLoading ? <div className="flex flex-wrap items-center justify-center">
                         {blogs.length > 0 ? (
                             blogs.map(blog => (
                                 <div key={blog.id}>
-                                    <div class="w-96 m-3 items-center sm:flex-col bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
-                                        <img class="w-full h-72 rounded-lg sm:rounded-none sm:rounded-t-lg" src={blog.imageUrl} alt="Bonnie Avatar" />
+                                    {/* <ProfileBlogCard /> */}
+                                    <div className="m-3 w-96 items-center bg-gray-50 flex-col rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+
+                                        <img className="w-full h-72 rounded-lg sm:rounded-none sm:rounded-t-lg" src={blog.imageUrl} alt="Bonnie Avatar" />
                                         <article className="p-6 bg-purple-400 rounded-b-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                                             <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{blog.title}</h2>
                                             <p className="mb-5 font-semibold text-black dark:text-gray-400">{blog.description.slice(0, 130) + "....."}</p>
+                                            {/* <ProfileBlogCard updateclick={updatemodel} clickdelete={toggleModal} /> */}
+                                            <div className='flex'>
+                                                <button className='block rounded-md px-3 py-2 hover:text-green-500 font-medium text-gray-300 hover:bg-gray-700 hover:text-white' onClick={() => updatemodel(blog.id)}>Update</button>
+                                                <button
+                                                    onClick={() => deleteblog(blog.id)}
+                                                    className='block rounded-md px-3 py-2 text-red-500 font-medium text-gray-300 hover:bg-gray-700 hover:text-white'
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
                                         </article>
                                     </div>
                                 </div>
@@ -213,10 +249,9 @@ function Dashboard() {
                         ) : (
                             <div className='flex flex-wrap font-bold text-white text-2xl items-center dark:text-black justify-center'>Blogs Not Found!</div>
                         )}
-                    </div>
+                    </div> : <div className='flex flex-wrap items-center justify-center'><div className="loader"></div></div>}
                 </div>
             </section>
-
         </>
     )
 }

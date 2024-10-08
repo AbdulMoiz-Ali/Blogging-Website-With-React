@@ -182,7 +182,7 @@ function Profile() {
               <div className="space-y-4">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                  <textarea rows="8" {...register("description")} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter event description here">Lorem ipsum dolor sit amet consectetur adipisicing elit.</textarea>
+                  <textarea required rows="8" {...register("description")} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter event description here">Lorem ipsum dolor sit amet consectetur adipisicing elit.</textarea>
                 </div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Profile Image</label>
                 <div className="flex items-center justify-center w-full">
@@ -194,7 +194,7 @@ function Profile() {
                       <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                     </div>
-                    <input id="dropzone-file" {...register("profileimage")} type="file" className="hidden" />
+                    <input required id="dropzone-file" {...register("profileimage")} type="file" className="hidden" />
                   </label>
                 </div>
 
